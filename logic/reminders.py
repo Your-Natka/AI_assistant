@@ -1,16 +1,17 @@
 from datetime import datetime, timedelta
+from core.dates import parse_natural_date
 
 REMINDERS = []
 
 
-def add_reminder(text: str, date_str: str) -> str:
-    """
-    date_str format: YYYY-MM-DD
-    """
-    try:
-        remind_date = datetime.strptime(date_str, "%Y-%m-%d").date()
-    except ValueError:
-        return "Invalid date format. Use YYYY-MM-DD."
+def add_reminder(text: str, date_str: str | None = None) -> str:
+    if not date_str:
+        date_str = parse_natural_date(text)
+
+    if not date_str:
+        return "I couldn't understand the date."
+
+    remind_date = datetime.strptime(date_str, "%Y-%m-%d").date()
 
     REMINDERS.append({
         "text": text,
